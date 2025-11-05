@@ -371,3 +371,119 @@ end })MainTab:CreateButton({
         end)
     end
 })
+-- === Console Executor Button ===
+MainTab:CreateButton({
+    Name = "Console Client",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local player = Players.LocalPlayer
+        local RunService = game:GetService("RunService")
+
+        -- Root GUI
+        local gui = Instance.new("ScreenGui")
+        gui.Name = "ConsoleExecutorPrompt"
+        gui.Parent = player:WaitForChild("PlayerGui")
+
+        -- Console Frame
+        local consoleFrame = Instance.new("Frame")
+        consoleFrame.Size = UDim2.new(0,500,0,300)
+        consoleFrame.Position = UDim2.new(0.5,-250,0.5,-150)
+        consoleFrame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+        consoleFrame.BorderColor3 = Color3.fromRGB(100,100,100)
+        consoleFrame.BorderSizePixel = 2
+        Instance.new("UICorner", consoleFrame).CornerRadius = UDim.new(0,8)
+        consoleFrame.Parent = gui
+
+        -- Title
+        local title = Instance.new("TextLabel")
+        title.Size = UDim2.new(1,0,0,36)
+        title.BackgroundTransparency = 1
+        title.Text = "Console Executor"
+        title.TextColor3 = Color3.fromRGB(255,255,255)
+        title.Font = Enum.Font.GothamBold
+        title.TextSize = 18
+        title.Parent = consoleFrame
+
+        -- Scrollable output
+        local scrollFrame = Instance.new("ScrollingFrame")
+        scrollFrame.Size = UDim2.new(1,-20,1,-70)
+        scrollFrame.Position = UDim2.new(0,10,0,40)
+        scrollFrame.BackgroundTransparency = 1
+        scrollFrame.BorderSizePixel = 0
+        scrollFrame.CanvasSize = UDim2.new(0,0,0,0)
+        scrollFrame.ScrollBarThickness = 6
+        scrollFrame.Parent = consoleFrame
+
+        local outputLabel = Instance.new("TextLabel")
+        outputLabel.Size = UDim2.new(1,0,0,0)
+        outputLabel.Position = UDim2.new(0,0,0,0)
+        outputLabel.BackgroundTransparency = 1
+        outputLabel.TextColor3 = Color3.fromRGB(255,255,255)
+        outputLabel.TextXAlignment = Enum.TextXAlignment.Left
+        outputLabel.TextYAlignment = Enum.TextYAlignment.Top
+        outputLabel.Font = Enum.Font.Code
+        outputLabel.TextSize = 14
+        outputLabel.TextWrapped = true
+        outputLabel.Text = ""
+        outputLabel.Parent = scrollFrame
+
+        local function updateCanvas()
+            outputLabel.Size = UDim2.new(1,0,0,outputLabel.TextBounds.Y + 10)
+            scrollFrame.CanvasSize = UDim2.new(0,0,0,outputLabel.Size.Y.Offset)
+            scrollFrame.CanvasPosition = Vector2.new(0, outputLabel.Size.Y.Offset)
+        end
+
+        -- Command line
+        local cmdFrame = Instance.new("Frame")
+        cmdFrame.Size = UDim2.new(1, -20, 0, 24)
+        cmdFrame.Position = UDim2.new(0, 10, 1, -30)
+        cmdFrame.BackgroundColor3 = Color3.fromRGB(50,50,50)
+        cmdFrame.Parent = consoleFrame
+        Instance.new("UICorner", cmdFrame).CornerRadius = UDim.new(0,4)
+
+        local prompt = Instance.new("TextLabel")
+        prompt.Size = UDim2.new(0,15,1,0)
+        prompt.Position = UDim2.new(0,5,0,0)
+        prompt.BackgroundTransparency = 1
+        prompt.Text = ">"
+        prompt.TextColor3 = Color3.fromRGB(200,200,200)
+        prompt.Font = Enum.Font.Code
+        prompt.TextSize = 14
+        prompt.TextXAlignment = Enum.TextXAlignment.Left
+        prompt.Parent = cmdFrame
+
+        local commandLine = Instance.new("TextBox")
+        commandLine.Size = UDim2.new(1,-20,1,0)
+        commandLine.Position = UDim2.new(0,20,0,0)
+        commandLine.BackgroundTransparency = 1
+        commandLine.TextColor3 = Color3.fromRGB(200,200,200)
+        commandLine.Font = Enum.Font.Code
+        commandLine.TextSize = 14
+        commandLine.ClearTextOnFocus = false
+        commandLine.TextXAlignment = Enum.TextXAlignment.Left
+        commandLine.TextYAlignment = Enum.TextYAlignment.Center
+        commandLine.Parent = cmdFrame
+
+        -- Run code
+        commandLine.FocusLost:Connect(function(enterPressed)
+            if enterPressed and commandLine.Text ~= "" then
+                local code = commandLine.Text
+                local ok, result = pcall(function() return loadstring(code)() end)
+                if ok then
+                    outputLabel.Text = outputLabel.Text .. "\n> " .. tostring(result)
+                else
+                    outputLabel.Text = outputLabel.Text .. "\n! Error: " .. tostring(result)
+                end
+                commandLine.Text = ""
+                updateCanvas()
+            end
+        end)
+
+        -- Rainbow border
+        local hue = 0
+        RunService.RenderStepped:Connect(function()
+            hue = (hue + 1) % 360
+            consoleFrame.BorderColor3 = Color3.fromHSV(hue/360,1,1)
+        end)
+    end
+})
