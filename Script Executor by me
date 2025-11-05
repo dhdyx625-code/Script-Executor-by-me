@@ -1,0 +1,373 @@
+-- // Rayfield Version of UltraCoolGUI (22 Buttons)
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "🌌 Ultra Script Hub 🌌",
+    LoadingTitle = "Loading UltraCoolGUI...",
+    LoadingSubtitle = "by ertzuskchdjq",
+    ConfigurationSaving = {
+       Enabled = true,
+       FolderName = "UltraScriptHub",
+       FileName = "Settings"
+    }
+})
+
+local MainTab = Window:CreateTab("Main Scripts", 4483362458)
+
+Rayfield:Notify({
+   Title = "Ultra Script Hub",
+   Content = "Loaded successfully with all 22 scripts!",
+   Duration = 4.5
+})
+
+-- === BUTTONS ===
+MainTab:CreateButton({ Name = "Backdoor.exe", Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/iK4oS/backdoor.exe/master/source.lua"))()
+end })
+
+MainTab:CreateButton({ Name = "NoClip", Callback = function()
+    local player = game.Players.LocalPlayer
+    local char = player.Character or player.CharacterAdded:Wait()
+    game:GetService("RunService").Stepped:Connect(function()
+        for _, part in ipairs(char:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end)
+end })
+
+MainTab:CreateButton({ Name = "FE Sit", Callback = function()
+    game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Sit = true
+end })
+
+MainTab:CreateButton({ Name = "Infinite Yield", Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+end })
+
+MainTab:CreateButton({ Name = "LALOL Hub Scanner", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-LALOL-Hub-Backdoor-Scanner-Without-the-Hint-52003"))()
+end })
+
+MainTab:CreateButton({ Name = "Super Speed", Callback = function()
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 120
+end })
+
+MainTab:CreateButton({ Name = "Super Ring (v5)", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-ring-parts-v5-no-key-49990"))()
+end })
+
+MainTab:CreateButton({ Name = "c00lkidd Executor", Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/rtlsmonk/c00lgui-made-by-rtls_a1-on-discord/refs/heads/main/have-fun"))()
+end })
+
+MainTab:CreateButton({ Name = "🌟Nameless Admin🌟", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Nameless-admin-REWORKED-43502"))()
+end })
+
+MainTab:CreateButton({ Name = "Decal Spam+Skybox [Client]", Callback = function()
+    local assetID = "8408806737"
+    for _, part in ipairs(workspace:GetDescendants()) do
+        if part:IsA("BasePart") then
+            local decal = Instance.new("Decal")
+            decal.Texture = "rbxassetid://"..assetID
+            decal.Parent = part
+            game:GetService("Debris"):AddItem(decal, 5)
+        end
+    end
+    local sky = Instance.new("Sky")
+    sky.SkyboxBk = "rbxassetid://"..assetID
+    sky.SkyboxDn = "rbxassetid://"..assetID
+    sky.SkyboxFt = "rbxassetid://"..assetID
+    sky.SkyboxLf = "rbxassetid://"..assetID
+    sky.SkyboxRt = "rbxassetid://"..assetID
+    sky.SkyboxUp = "rbxassetid://"..assetID
+    sky.Parent = game:GetService("Lighting")
+end })
+
+MainTab:CreateButton({ Name = "Target Player (Fling)", Callback = function()
+    Rayfield:Notify({Title = "⚠️ Soon", Content = "Target fling setup will be added soon!", Duration = 3})
+end })
+
+MainTab:CreateButton({ Name = "Dex Explorer", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Dex-plus-plus-46438"))()
+end })
+
+MainTab:CreateButton({ Name = "Server Admin [Press M]", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Server-Admin-R6-47020"))()
+end })
+
+MainTab:CreateButton({ Name = "99 Nights in The Forest Script", Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/nightsintheforest.lua",true))()
+end })
+
+MainTab:CreateButton({ Name = "Spinner Battles OP Farm", Callback = function()
+    local player = game.Players.LocalPlayer
+    local char = player.Character or player.CharacterAdded:Wait()
+    local hrp = char:WaitForChild("HumanoidRootPart")
+    local spinning = true
+    task.spawn(function()
+        while spinning and hrp.Parent do
+            hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(999999999), 0)
+            task.wait(0.001)
+        end
+    end)
+    task.spawn(function()
+        while spinning do
+            for _, plr in ipairs(game.Players:GetPlayers()) do
+                if plr ~= player and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+                    plr.Character.HumanoidRootPart.CFrame = hrp.CFrame * CFrame.new(0,0,3)
+                end
+            end
+            task.wait(0.01)
+        end
+    end)
+    task.delay(90,function() spinning=false end)
+end })
+
+MainTab:CreateButton({ Name = "Free Product OP", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Untitled-Battlegrounds-Free-product-free-gamepass-READ-THE-DESCRIPTION-52699"))()
+end })
+
+MainTab:CreateButton({ Name = "OP Fling Tool", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Classic-Sword-Fling-Tool-16842"))()
+end })
+
+MainTab:CreateButton({ Name = "Simple ESP GUI", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-ChatGPT-esp-gay-44168"))()
+end })
+
+MainTab:CreateButton({ Name = "c00lclan v1", Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/cfsmi2/c00lguiv1/refs/heads/main/Main.lua",true))()
+end })
+
+MainTab:CreateButton({ Name = "Free FE Emotes & Animation Packs", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-AFEM-14048"))()
+end })
+
+MainTab:CreateButton({ Name = "FE Ball Roll [R6]", Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-FE-Ball-Roll-37962"))()
+end })
+
+MainTab:CreateButton({ Name = "Close GUI", Callback = function()
+    Rayfield:Destroy()
+end })MainTab:CreateButton({
+    Name = "c00lkidd Executor",
+    Callback = function()
+        -- === Ghost Text / Rainbow Executor inside Rayfield ===
+        local Players = game:GetService("Players")
+        local player = Players.LocalPlayer
+        local RunService = game:GetService("RunService")
+
+        -- HSV helper
+        local function HSV(h,s,v)
+            return Color3.fromHSV(h/360,s,v)
+        end
+
+        -- Root GUI
+        local gui = Instance.new("ScreenGui")
+        gui.Name = "CoolkidExecutorGhostText"
+        gui.ResetOnSpawn = false
+        gui.Parent = player:WaitForChild("PlayerGui")
+
+        -- Main Frame
+        local frame = Instance.new("Frame", gui)
+        frame.Size = UDim2.new(0,450,0,300)
+        frame.Position = UDim2.new(0.5,-225,0.5,-150)
+        frame.BackgroundColor3 = Color3.fromRGB(20,20,20)
+        frame.BorderColor3 = Color3.fromRGB(100,0,0)
+        frame.BorderSizePixel = 2
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0,10)
+
+        -- Title Bar
+        local titleBar = Instance.new("Frame", frame)
+        titleBar.Size = UDim2.new(1,0,0,36)
+        titleBar.BackgroundColor3 = Color3.fromRGB(255,0,0)
+        Instance.new("UICorner", titleBar).CornerRadius = UDim.new(0,10)
+
+        local titleLabel = Instance.new("TextLabel", titleBar)
+        titleLabel.Size = UDim2.new(1,-50,1,0)
+        titleLabel.Position = UDim2.new(0,8,0,0)
+        titleLabel.BackgroundTransparency = 1
+        titleLabel.Font = Enum.Font.GothamBold
+        titleLabel.TextSize = 16
+        titleLabel.Text = "Executor Made by me"
+        titleLabel.TextColor3 = Color3.fromRGB(255,255,255)
+        titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+        titleLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+        -- Toggle Button
+        local toggleBtn = Instance.new("TextButton", titleBar)
+        toggleBtn.Size = UDim2.new(0,36,0,22)
+        toggleBtn.Position = UDim2.new(1,-44,0,7)
+        toggleBtn.Font = Enum.Font.GothamBold
+        toggleBtn.TextSize = 14
+        toggleBtn.Text = "-"
+        toggleBtn.TextColor3 = Color3.fromRGB(255,255,255)
+        toggleBtn.BackgroundColor3 = Color3.fromRGB(220,20,25)
+        Instance.new("UICorner", toggleBtn).CornerRadius = UDim.new(0,6)
+
+        -- Scrollable Editor
+        local scrollFrame = Instance.new("ScrollingFrame", frame)
+        scrollFrame.Size = UDim2.new(1,-20,1,-120)
+        scrollFrame.Position = UDim2.new(0,10,0,44)
+        scrollFrame.BackgroundTransparency = 1
+        scrollFrame.BorderSizePixel = 0
+        scrollFrame.CanvasSize = UDim2.new(0,0,0,0)
+        scrollFrame.ScrollBarThickness = 6
+
+        local textBox = Instance.new("TextBox", scrollFrame)
+        textBox.Size = UDim2.new(1,0,0,100)
+        textBox.Position = UDim2.new(0,0,0,0)
+        textBox.BackgroundTransparency = 0
+        textBox.BackgroundColor3 = Color3.fromRGB(18,18,18)
+        textBox.TextColor3 = Color3.fromRGB(255,255,255)
+        textBox.MultiLine = true
+        textBox.ClearTextOnFocus = false
+        textBox.TextWrapped = true
+        textBox.Font = Enum.Font.Code
+        textBox.TextSize = 14
+        textBox.TextXAlignment = Enum.TextXAlignment.Left
+        textBox.TextYAlignment = Enum.TextYAlignment.Top
+        textBox.Text = "" -- start empty
+
+        -- Ghost text label
+        local ghostLabel = Instance.new("TextLabel", scrollFrame)
+        ghostLabel.Size = UDim2.new(1,0,1,0)
+        ghostLabel.Position = UDim2.new(0,0,0,0)
+        ghostLabel.BackgroundTransparency = 1
+        ghostLabel.Text = "Paste your Lua Script or Loadstring here"
+        ghostLabel.TextColor3 = Color3.fromRGB(160,160,160)
+        ghostLabel.Font = Enum.Font.Code
+        ghostLabel.TextSize = 14
+        ghostLabel.TextXAlignment = Enum.TextXAlignment.Left
+        ghostLabel.TextYAlignment = Enum.TextYAlignment.Top
+        ghostLabel.ZIndex = 2
+
+        -- Update CanvasSize dynamically
+        local function updateCanvas()
+            textBox.Size = UDim2.new(1,0,0,math.max(textBox.TextBounds.Y + 10, scrollFrame.AbsoluteSize.Y))
+            scrollFrame.CanvasSize = UDim2.new(0,0,0,textBox.Size.Y.Offset)
+        end
+        textBox:GetPropertyChangedSignal("Text"):Connect(function()
+            updateCanvas()
+            ghostLabel.Visible = textBox.Text == ""
+        end)
+        textBox:GetPropertyChangedSignal("TextBounds"):Connect(updateCanvas)
+        updateCanvas()
+
+        -- Button Creator (fixed colors)
+        local function createButton(name,posX,color)
+            local btn = Instance.new("TextButton", frame)
+            btn.Size = UDim2.new(0,100,0,32)
+            btn.Position = UDim2.new(0,posX,1,-50)
+            btn.BackgroundColor3 = color
+            btn.Font = Enum.Font.GothamBold
+            btn.Text = name
+            btn.TextSize = 14
+            btn.TextColor3 = Color3.fromRGB(255,255,255)
+            Instance.new("UICorner", btn).CornerRadius = UDim.new(0,6)
+            return btn
+        end
+
+        local runBtn = createButton("Run",10,Color3.fromRGB(0,200,0))
+        local clearBtn = createButton("Clear",120,Color3.fromRGB(180,0,200))
+        local scanBtn = createButton("Backdoor",230,Color3.fromRGB(0,120,255))
+        local dexBtn = createButton("DEX",340,Color3.fromRGB(0,120,255))
+
+        -- Button Logic
+        runBtn.MouseButton1Click:Connect(function()
+            local code = textBox.Text
+            if not code:match("%S") then return end
+            local ok, err = pcall(function()
+                local f = loadstring(code)
+                if f then f() end
+            end)
+            if not ok then warn("Execution Error:", err) end
+        end)
+
+        clearBtn.MouseButton1Click:Connect(function()
+            textBox.Text = ""
+        end)
+
+        scanBtn.MouseButton1Click:Connect(function()
+            local ok, err = pcall(function()
+                loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-LALOL-Hub-Backdoor-Scanner-Without-the-Hint-52003"))()
+            end)
+            if not ok then warn("Backdoor Error:", err) end
+        end)
+
+        dexBtn.MouseButton1Click:Connect(function()
+            local ok, err = pcall(function()
+                local dexSource = game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua")
+                local dexFunc = loadstring(dexSource)
+                if dexFunc then dexFunc() end
+            end)
+            if not ok then warn("DEX Error:", err) end
+        end)
+
+        -- Flatten / Restore
+        local isFlattened = false
+        local dragInput, dragStart, startPos
+
+        toggleBtn.MouseButton1Click:Connect(function()
+            if not isFlattened then
+                frame.Size = UDim2.new(frame.Size.X.Scale, frame.Size.X.Offset,0,36)
+                scrollFrame.Visible = false
+                runBtn.Visible = false
+                clearBtn.Visible = false
+                scanBtn.Visible = false
+                dexBtn.Visible = false
+                toggleBtn.Text = "+"
+                toggleBtn.BackgroundColor3 = Color3.fromRGB(0,200,0)
+                isFlattened = true
+            else
+                frame.Size = UDim2.new(0,450,0,300)
+                scrollFrame.Visible = true
+                runBtn.Visible = true
+                clearBtn.Visible = true
+                scanBtn.Visible = true
+                dexBtn.Visible = true
+                toggleBtn.Text = "-"
+                toggleBtn.BackgroundColor3 = Color3.fromRGB(220,20,25)
+                isFlattened = false
+            end
+        end)
+
+        -- Drag only when flattened
+        titleBar.InputBegan:Connect(function(input)
+            if isFlattened and (input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch) then
+                dragInput = input
+                dragStart = input.Position
+                startPos = frame.Position
+                input.Changed:Connect(function()
+                    if input.UserInputState==Enum.UserInputState.End then
+                        dragInput = nil
+                    end
+                end)
+            end
+        end)
+
+        titleBar.InputChanged:Connect(function(input)
+            if isFlattened and input == dragInput then
+                local delta = input.Position - dragStart
+                frame.Position = UDim2.new(
+                    startPos.X.Scale,
+                    startPos.X.Offset + delta.X,
+                    startPos.Y.Scale,
+                    startPos.Y.Offset + delta.Y
+                )
+            end
+        end)
+
+        -- Rainbow Animation for Executor Background (exclude buttons)
+        local hue = 0
+        RunService.RenderStepped:Connect(function()
+            hue = (hue + 0.5) % 360
+            local color = HSV(hue,1,1)
+            frame.BackgroundColor3 = color
+            titleBar.BackgroundColor3 = color
+            textBox.BackgroundColor3 = color:lerp(Color3.fromRGB(18,18,18),0.3)
+        end)
+    end
+})
