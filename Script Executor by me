@@ -371,36 +371,30 @@ end })MainTab:CreateButton({
         end)
     end
 })
+
+-- Assuming you already have your Rayfield Window and MainTab
 MainTab:CreateButton({
     Name = "Neon Console Executor",
     Callback = function()
+        -- === Neon Cyber Mobile Bottom Console Executor v2 (Black Theme) ===
         local Players = game:GetService("Players")
         local player = Players.LocalPlayer
         local TweenService = game:GetService("TweenService")
         local RunService = game:GetService("RunService")
-
-        -- Prevent multiple instances
-        if player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("NeonBottomConsole") then
-            Rayfield:Notify({
-                Title = "Executor",
-                Content = "Neon Console Executor is already running!",
-                Duration = 3
-            })
-            return
-        end
 
         local FONT = Enum.Font.Code
         local FONT_SIZE = 16
         local GUI_HEIGHT = 180
         local INPUT_HEIGHT = 36
 
-        local BG_COLOR = Color3.fromRGB(10, 10, 20)
-        local FRAME_COLOR = Color3.fromRGB(25, 0, 50)
-        local INPUT_BG = Color3.fromRGB(50, 50, 50)
-        local RUN_COLOR = Color3.fromRGB(0, 255, 180)
-        local HIDE_COLOR = Color3.fromRGB(255, 0, 100)
-        local SHOW_COLOR = Color3.fromRGB(0, 200, 255)
-        local FG_COLOR = Color3.fromRGB(220, 220, 255)
+        -- Colors
+        local BG_COLOR = Color3.fromRGB(0,0,0)
+        local FRAME_COLOR = Color3.fromRGB(0,0,0)
+        local INPUT_BG = Color3.fromRGB(50,50,50)
+        local RUN_COLOR = Color3.fromRGB(0,255,180)
+        local HIDE_COLOR = Color3.fromRGB(255,0,100)
+        local SHOW_COLOR = Color3.fromRGB(0,200,255)
+        local FG_COLOR = Color3.fromRGB(220,220,255)
         local PLACEHOLDER_COLOR = Color3.fromRGB(150,150,150)
 
         -- Safe loadstring
@@ -464,6 +458,7 @@ MainTab:CreateButton({
             entry.TextWrapped = true
             entry.Text = text
             table.insert(logEntries, entry)
+
             outputScroll.CanvasSize = UDim2.new(0,0,#logEntries*(FONT_SIZE+6))
             outputScroll.CanvasPosition = Vector2.new(0, outputScroll.CanvasSize.Y.Offset)
         end
@@ -487,7 +482,7 @@ MainTab:CreateButton({
         box.Font = FONT
         box.TextSize = FONT_SIZE
         box.TextColor3 = PLACEHOLDER_COLOR
-        box.Text = ">command line:"
+        box.Text = ">command line:"  -- placeholder text
         box.BackgroundColor3 = INPUT_BG
         box.ClearTextOnFocus = false
         box.MultiLine = false
@@ -553,6 +548,7 @@ MainTab:CreateButton({
         addButtonNeon(showBtn, SHOW_COLOR, Color3.fromRGB(0,80,180), 1.5)
         Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0,6)
 
+        -- Draggable show button
         local dragging, dragStart, startPos = false, nil, nil
         showBtn.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -560,7 +556,9 @@ MainTab:CreateButton({
                 dragStart = input.Position
                 startPos = showBtn.Position
                 input.Changed:Connect(function()
-                    if input.UserInputState == Enum.UserInputState.End then dragging = false end
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                    end
                 end)
             end
         end)
@@ -576,13 +574,10 @@ MainTab:CreateButton({
         local function runCommand(cmd)
             if not cmd or cmd:match("^%s*$") then return end
             if cmd:lower() == "/clear" then
-                for i,v in ipairs(outputScroll:GetChildren()) do
-                    if v:IsA("TextLabel") then v:Destroy() end
-                end
+                for _, entry in ipairs(logEntries) do entry:Destroy() end
                 logEntries = {}
                 return
             end
-            log("> "..cmd)
             local fn, err = tryLoadString("return "..cmd)
             if fn then
                 local ok,res = pcall(fn)
@@ -596,10 +591,8 @@ MainTab:CreateButton({
                     log("Error: "..tostring(err))
                 end
             end
-            box.Text = ""
-            box.TextColor3 = PLACEHOLDER_COLOR
             box.Text = ">command line:"
-            scrollWrapper.CanvasPosition = Vector2.new(0,0)
+            box.TextColor3 = PLACEHOLDER_COLOR
         end
 
         -- Override print
