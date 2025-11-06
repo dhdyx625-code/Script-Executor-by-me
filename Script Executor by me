@@ -487,3 +487,198 @@ MainTab:CreateButton({
         end)
     end
 })
+MainTab:CreateButton({
+    Name = "Neon Console Executor",
+    Callback = function()
+        -- Prevent spawning multiple GUIs
+        if game.Players.LocalPlayer.PlayerGui:FindFirstChild("NeonBottomConsole") then return end
+
+        -- === Neon Cyber Mobile Bottom Console Executor v2 ===
+        local Players = game:GetService("Players")
+        local player = Players.LocalPlayer
+        local TweenService = game:GetService("TweenService")
+        local RunService = game:GetService("RunService")
+
+        local FONT = Enum.Font.Code
+        local FONT_SIZE = 16
+        local GUI_HEIGHT = 180
+        local INPUT_HEIGHT = 36
+
+        local BG_COLOR = Color3.fromRGB(10,10,20)
+        local FRAME_COLOR = Color3.fromRGB(25,0,50)
+        local INPUT_BG = Color3.fromRGB(50,50,50)
+        local RUN_COLOR = Color3.fromRGB(0,255,180)
+        local HIDE_COLOR = Color3.fromRGB(255,0,100)
+        local SHOW_COLOR = Color3.fromRGB(0,200,255)
+        local FG_COLOR = Color3.fromRGB(220,220,255)
+        local PLACEHOLDER_COLOR = Color3.fromRGB(150,150,150)
+
+        local function tryLoadString(code)
+            if type(loadstring)=="function" then return loadstring(code)
+            elseif type(load)=="function" then
+                local ok, fnOrErr = pcall(function() return load(code) end)
+                if ok then return fnOrErr else return nil, fnOrErr end
+            end
+            return nil, "No loadstring/load available"
+        end
+
+        local function addButtonNeon(button,color1,color2,duration)
+            local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+            local tween = TweenService:Create(button, tweenInfo, {BackgroundColor3=color2})
+            button.BackgroundColor3 = color1
+            tween:Play()
+        end
+
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "NeonBottomConsole"
+        screenGui.ResetOnSpawn = false
+        screenGui.IgnoreGuiInset = true
+        screenGui.Parent = player:WaitForChild("PlayerGui")
+
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(0.95,0,0,GUI_HEIGHT)
+        frame.Position = UDim2.new(0.025,0,1,-GUI_HEIGHT-10)
+        frame.BackgroundColor3 = FRAME_COLOR
+        frame.BorderSizePixel = 0
+        frame.ClipsDescendants = true
+        frame.Parent = screenGui
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
+
+        local outputScroll = Instance.new("ScrollingFrame")
+        outputScroll.Parent = frame
+        outputScroll.Size = UDim2.new(0.98,0,0.68,0)
+        outputScroll.Position = UDim2.new(0.01,0,0,5)
+        outputScroll.BackgroundTransparency = 0.9
+        outputScroll.BackgroundColor3 = BG_COLOR
+        outputScroll.ScrollBarThickness = 6
+        outputScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+        local logEntries = {}
+        local function log(text)
+            local entry = Instance.new("TextLabel")
+            entry.Parent = outputScroll
+            entry.Size = UDim2.new(1,0,0,FONT_SIZE+6)
+            entry.Position = UDim2.new(0,0,0,#logEntries*(FONT_SIZE+6))
+            entry.BackgroundTransparency = 1
+            entry.Font = FONT
+            entry.TextSize = FONT_SIZE
+            entry.TextColor3 = FG_COLOR
+            entry.TextXAlignment = Enum.TextXAlignment.Left
+            entry.TextYAlignment = Enum.TextYAlignment.Top
+            entry.TextWrapped = true
+            entry.Text = text
+            table.insert(logEntries, entry)
+            outputScroll.CanvasSize = UDim2.new(0,0,#logEntries*(FONT_SIZE+6))
+            outputScroll.CanvasPosition = Vector2.new(0, outputScroll.CanvasSize.Y.Offset)
+        end
+
+        local scrollWrapper = Instance.new("ScrollingFrame")
+        scrollWrapper.Size = UDim2.new(0.6,0,0,INPUT_HEIGHT)
+        scrollWrapper.Position = UDim2.new(0.01,0,0.72,0)
+        scrollWrapper.BackgroundTransparency = 1
+        scrollWrapper.ScrollBarThickness = 6
+        scrollWrapper.HorizontalScrollBarInset = Enum.ScrollBarInset.Always
+        scrollWrapper.CanvasSize = UDim2.new(1,0,0,0)
+        scrollWrapper.AutomaticCanvasSize = Enum.AutomaticSize.X
+        scrollWrapper.Parent = frame
+
+        local box = Instance.new("TextBox")
+        box.Parent = scrollWrapper
+        box.Size = UDim2.new(1,0,1,0)
+        box.Position = UDim2.new(0,0,0,0)
+        box.Font = FONT
+        box.TextSize = FONT_SIZE
+        box.TextColor3 = PLACEHOLDER_COLOR
+        box.Text = ">command line:"
+        box.BackgroundColor3 = INPUT_BG
+        box.ClearTextOnFocus = false
+        box.MultiLine = false
+        box.TextWrapped = false
+        box.TextXAlignment = Enum.TextXAlignment.Left
+        box.TextYAlignment = Enum.TextYAlignment.Center
+        Instance.new("UICorner", box).CornerRadius = UDim.new(0,6)
+
+        box.Focused:Connect(function()
+            if box.Text==">command line:" then
+                box.Text = ""
+                box.TextColor3 = FG_COLOR
+            end
+        end)
+        box.FocusLost:Connect(function()
+            if box.Text=="" then
+                box.Text=">command line:"
+                box.TextColor3 = PLACEHOLDER_COLOR
+            end
+        end)
+
+        local execBtn = Instance.new("TextButton")
+        execBtn.Parent = frame
+        execBtn.Size = UDim2.new(0.18,0,0,INPUT_HEIGHT)
+        execBtn.Position = UDim2.new(0.63,0,0.72,0)
+        execBtn.Text = "Run"
+        execBtn.Font = FONT
+        execBtn.TextSize = FONT_SIZE
+        execBtn.TextColor3 = Color3.new(1,1,1)
+        execBtn.BackgroundColor3 = RUN_COLOR
+        execBtn.BorderSizePixel = 0
+        addButtonNeon(execBtn, RUN_COLOR, Color3.fromRGB(0,150,120), 1.5)
+        Instance.new("UICorner", execBtn).CornerRadius = UDim.new(0,6)
+
+        local hideBtn = Instance.new("TextButton")
+        hideBtn.Parent = frame
+        hideBtn.Size = UDim2.new(0.18,0,0,INPUT_HEIGHT)
+        hideBtn.Position = UDim2.new(0.81,0,0.72,0)
+        hideBtn.Text = "Hide"
+        hideBtn.Font = FONT
+        hideBtn.TextSize = FONT_SIZE
+        hideBtn.TextColor3 = Color3.new(1,1,1)
+        hideBtn.BackgroundColor3 = HIDE_COLOR
+        hideBtn.BorderSizePixel = 0
+        addButtonNeon(hideBtn, HIDE_COLOR, Color3.fromRGB(150,0,80), 1.5)
+        Instance.new("UICorner", hideBtn).CornerRadius = UDim.new(0,6)
+
+        local showBtn = Instance.new("TextButton")
+        showBtn.Parent = screenGui
+        showBtn.Size = UDim2.new(0.2,0,0,INPUT_HEIGHT)
+        showBtn.Position = UDim2.new(0.4,0,0.85,0)
+        showBtn.Text = "Show"
+        showBtn.Font = FONT
+        showBtn.TextSize = FONT_SIZE
+        showBtn.TextColor3 = Color3.new(1,1,1)
+        showBtn.BackgroundColor3 = SHOW_COLOR
+        showBtn.BorderSizePixel = 0
+        showBtn.Visible = false
+        addButtonNeon(showBtn, SHOW_COLOR, Color3.fromRGB(0,80,180), 1.5)
+        Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0,6)
+
+        local function runCommand(cmd)
+            if not cmd or cmd:match("^%s*$") then return end
+            log("> "..cmd)
+            local fn, err = tryLoadString("return "..cmd)
+            if fn then
+                local ok,res = pcall(fn)
+                if ok and res~=nil then log(tostring(res)) end
+            else
+                fn, err = tryLoadString(cmd)
+                if fn then
+                    local ok,res = pcall(fn)
+                    if not ok then log("Error: "..tostring(res)) end
+                else
+                    log("Error: "..tostring(err))
+                end
+            end
+            box.Text = ">command line:"
+            box.TextColor3 = PLACEHOLDER_COLOR
+            scrollWrapper.CanvasPosition = Vector2.new(0,0)
+        end
+
+        execBtn.MouseButton1Click:Connect(function()
+            if box.Text ~= ">command line:" then runCommand(box.Text) end
+        end)
+        box.FocusLost:Connect(function(enterPressed)
+            if enterPressed and box.Text ~= ">command line:" then runCommand(box.Text) end
+        end)
+        hideBtn.MouseButton1Click:Connect(function() frame.Visible=false showBtn.Visible=true end)
+        showBtn.MouseButton1Click:Connect(function() frame.Visible=true showBtn.Visible=false end)
+    end
+})
