@@ -374,38 +374,46 @@ end })MainTab:CreateButton({
 MainTab:CreateButton({
     Name = "Neon Console Executor",
     Callback = function()
-        -- Prevent spawning multiple GUIs
-        if game.Players.LocalPlayer.PlayerGui:FindFirstChild("NeonBottomConsole") then return end
-
-        -- === Neon Cyber Mobile Bottom Console Executor v2 ===
         local Players = game:GetService("Players")
         local player = Players.LocalPlayer
         local TweenService = game:GetService("TweenService")
         local RunService = game:GetService("RunService")
+
+        -- Prevent multiple instances
+        if player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("NeonBottomConsole") then
+            Rayfield:Notify({
+                Title = "Executor",
+                Content = "Neon Console Executor is already running!",
+                Duration = 3
+            })
+            return
+        end
 
         local FONT = Enum.Font.Code
         local FONT_SIZE = 16
         local GUI_HEIGHT = 180
         local INPUT_HEIGHT = 36
 
-        local BG_COLOR = Color3.fromRGB(10,10,20)
-        local FRAME_COLOR = Color3.fromRGB(25,0,50)
-        local INPUT_BG = Color3.fromRGB(50,50,50)
-        local RUN_COLOR = Color3.fromRGB(0,255,180)
-        local HIDE_COLOR = Color3.fromRGB(255,0,100)
-        local SHOW_COLOR = Color3.fromRGB(0,200,255)
-        local FG_COLOR = Color3.fromRGB(220,220,255)
+        local BG_COLOR = Color3.fromRGB(10, 10, 20)
+        local FRAME_COLOR = Color3.fromRGB(25, 0, 50)
+        local INPUT_BG = Color3.fromRGB(50, 50, 50)
+        local RUN_COLOR = Color3.fromRGB(0, 255, 180)
+        local HIDE_COLOR = Color3.fromRGB(255, 0, 100)
+        local SHOW_COLOR = Color3.fromRGB(0, 200, 255)
+        local FG_COLOR = Color3.fromRGB(220, 220, 255)
         local PLACEHOLDER_COLOR = Color3.fromRGB(150,150,150)
 
+        -- Safe loadstring
         local function tryLoadString(code)
-            if type(loadstring)=="function" then return loadstring(code)
-            elseif type(load)=="function" then
+            if type(loadstring) == "function" then return loadstring(code)
+            elseif type(load) == "function" then
                 local ok, fnOrErr = pcall(function() return load(code) end)
                 if ok then return fnOrErr else return nil, fnOrErr end
             end
             return nil, "No loadstring/load available"
         end
 
+        -- Neon button animation
         local function addButtonNeon(button,color1,color2,duration)
             local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
             local tween = TweenService:Create(button, tweenInfo, {BackgroundColor3=color2})
@@ -413,12 +421,14 @@ MainTab:CreateButton({
             tween:Play()
         end
 
+        -- GUI
         local screenGui = Instance.new("ScreenGui")
         screenGui.Name = "NeonBottomConsole"
         screenGui.ResetOnSpawn = false
         screenGui.IgnoreGuiInset = true
         screenGui.Parent = player:WaitForChild("PlayerGui")
 
+        -- Main frame
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(0.95,0,0,GUI_HEIGHT)
         frame.Position = UDim2.new(0.025,0,1,-GUI_HEIGHT-10)
@@ -428,6 +438,7 @@ MainTab:CreateButton({
         frame.Parent = screenGui
         Instance.new("UICorner", frame).CornerRadius = UDim.new(0,12)
 
+        -- Output scroll frame
         local outputScroll = Instance.new("ScrollingFrame")
         outputScroll.Parent = frame
         outputScroll.Size = UDim2.new(0.98,0,0.68,0)
@@ -437,6 +448,7 @@ MainTab:CreateButton({
         outputScroll.ScrollBarThickness = 6
         outputScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 
+        -- Store log entries
         local logEntries = {}
         local function log(text)
             local entry = Instance.new("TextLabel")
@@ -456,6 +468,7 @@ MainTab:CreateButton({
             outputScroll.CanvasPosition = Vector2.new(0, outputScroll.CanvasSize.Y.Offset)
         end
 
+        -- Horizontal scroll wrapper for input
         local scrollWrapper = Instance.new("ScrollingFrame")
         scrollWrapper.Size = UDim2.new(0.6,0,0,INPUT_HEIGHT)
         scrollWrapper.Position = UDim2.new(0.01,0,0.72,0)
@@ -466,6 +479,7 @@ MainTab:CreateButton({
         scrollWrapper.AutomaticCanvasSize = Enum.AutomaticSize.X
         scrollWrapper.Parent = frame
 
+        -- TextBox input with placeholder
         local box = Instance.new("TextBox")
         box.Parent = scrollWrapper
         box.Size = UDim2.new(1,0,1,0)
@@ -482,19 +496,21 @@ MainTab:CreateButton({
         box.TextYAlignment = Enum.TextYAlignment.Center
         Instance.new("UICorner", box).CornerRadius = UDim.new(0,6)
 
+        -- Placeholder behavior
         box.Focused:Connect(function()
-            if box.Text==">command line:" then
+            if box.Text == ">command line:" then
                 box.Text = ""
                 box.TextColor3 = FG_COLOR
             end
         end)
         box.FocusLost:Connect(function()
-            if box.Text=="" then
-                box.Text=">command line:"
+            if box.Text == "" then
+                box.Text = ">command line:"
                 box.TextColor3 = PLACEHOLDER_COLOR
             end
         end)
 
+        -- Run Button
         local execBtn = Instance.new("TextButton")
         execBtn.Parent = frame
         execBtn.Size = UDim2.new(0.18,0,0,INPUT_HEIGHT)
@@ -508,6 +524,7 @@ MainTab:CreateButton({
         addButtonNeon(execBtn, RUN_COLOR, Color3.fromRGB(0,150,120), 1.5)
         Instance.new("UICorner", execBtn).CornerRadius = UDim.new(0,6)
 
+        -- Hide Button
         local hideBtn = Instance.new("TextButton")
         hideBtn.Parent = frame
         hideBtn.Size = UDim2.new(0.18,0,0,INPUT_HEIGHT)
@@ -521,6 +538,7 @@ MainTab:CreateButton({
         addButtonNeon(hideBtn, HIDE_COLOR, Color3.fromRGB(150,0,80), 1.5)
         Instance.new("UICorner", hideBtn).CornerRadius = UDim.new(0,6)
 
+        -- Show Button
         local showBtn = Instance.new("TextButton")
         showBtn.Parent = screenGui
         showBtn.Size = UDim2.new(0.2,0,0,INPUT_HEIGHT)
@@ -535,13 +553,40 @@ MainTab:CreateButton({
         addButtonNeon(showBtn, SHOW_COLOR, Color3.fromRGB(0,80,180), 1.5)
         Instance.new("UICorner", showBtn).CornerRadius = UDim.new(0,6)
 
+        local dragging, dragStart, startPos = false, nil, nil
+        showBtn.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragStart = input.Position
+                startPos = showBtn.Position
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then dragging = false end
+                end)
+            end
+        end)
+        showBtn.InputChanged:Connect(function(input)
+            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                local delta = input.Position - dragStart
+                showBtn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+                                             startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+
+        -- Run command function with /clear
         local function runCommand(cmd)
             if not cmd or cmd:match("^%s*$") then return end
+            if cmd:lower() == "/clear" then
+                for i,v in ipairs(outputScroll:GetChildren()) do
+                    if v:IsA("TextLabel") then v:Destroy() end
+                end
+                logEntries = {}
+                return
+            end
             log("> "..cmd)
             local fn, err = tryLoadString("return "..cmd)
             if fn then
                 local ok,res = pcall(fn)
-                if ok and res~=nil then log(tostring(res)) end
+                if ok and res ~= nil then log(tostring(res)) end
             else
                 fn, err = tryLoadString(cmd)
                 if fn then
@@ -551,11 +596,23 @@ MainTab:CreateButton({
                     log("Error: "..tostring(err))
                 end
             end
-            box.Text = ">command line:"
+            box.Text = ""
             box.TextColor3 = PLACEHOLDER_COLOR
+            box.Text = ">command line:"
             scrollWrapper.CanvasPosition = Vector2.new(0,0)
         end
 
+        -- Override print
+        local oldPrint = print
+        print = function(...)
+            local args = {...}
+            local str = ""
+            for i,v in ipairs(args) do str = str .. tostring(v) .. "\t" end
+            log(str)
+            oldPrint(table.unpack(args))
+        end
+
+        -- Button connections
         execBtn.MouseButton1Click:Connect(function()
             if box.Text ~= ">command line:" then runCommand(box.Text) end
         end)
