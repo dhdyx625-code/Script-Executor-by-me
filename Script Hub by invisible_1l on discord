@@ -65,29 +65,6 @@ MainTab:CreateButton({ Name = "🌟Nameless Admin🌟", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Nameless-admin-REWORKED-43502"))()
 end })
 
-MainTab:CreateButton({ Name = "Decal Spam+Skybox [Client]", Callback = function()
-    local assetID = "8408806737"
-    for _, part in ipairs(workspace:GetDescendants()) do
-        if part:IsA("BasePart") then
-            local decal = Instance.new("Decal")
-            decal.Texture = "rbxassetid://"..assetID
-            decal.Parent = part
-            game:GetService("Debris"):AddItem(decal, 5)
-        end
-    end
-    local sky = Instance.new("Sky")
-    sky.SkyboxBk = "rbxassetid://"..assetID
-    sky.SkyboxDn = "rbxassetid://"..assetID
-    sky.SkyboxFt = "rbxassetid://"..assetID
-    sky.SkyboxLf = "rbxassetid://"..assetID
-    sky.SkyboxRt = "rbxassetid://"..assetID
-    sky.SkyboxUp = "rbxassetid://"..assetID
-    sky.Parent = game:GetService("Lighting")
-end })
-
-MainTab:CreateButton({ Name = "Target Player (Fling)", Callback = function()
-    Rayfield:Notify({Title = "⚠️ Soon", Content = "Target fling setup will be added soon!", Duration = 3})
-end })
 
 MainTab:CreateButton({ Name = "Dex Explorer", Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Dex-plus-plus-46438"))()
