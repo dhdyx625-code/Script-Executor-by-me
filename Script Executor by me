@@ -2,9 +2,9 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "🌌 Ultra Script Hub 🌌",
+    Name = "�Script Hub",
     LoadingTitle = "Loading UltraCoolGUI...",
-    LoadingSubtitle = "by ertzuskchdjq",
+    LoadingSubtitle = "by invisible_1l On discord!",
     ConfigurationSaving = {
        Enabled = true,
        FolderName = "UltraScriptHub",
@@ -615,4 +615,10 @@ MainTab:CreateButton({
         hideBtn.MouseButton1Click:Connect(function() frame.Visible=false showBtn.Visible=true end)
         showBtn.MouseButton1Click:Connect(function() frame.Visible=true showBtn.Visible=false end)
     end
+})
+MainTab:CreateButton({
+	Name = "Black Hole v2 [NOT Mine",
+	Callback = function()
+		loadstring(game:HttpGet("https://pastefy.app/PU6VWuJk/raw"))()
+	end,
 })
