@@ -843,36 +843,46 @@ MainTab:CreateButton({
     end
 })
 
---Wormhole Tool
+            local newPortal = createWormhole(pos)
+            table.insert(wormholes,newPortal)
+        end)
+
+        -- // Notify player
+        if game:GetService("StarterGui"):FindFirstChild("WormholeToolNotify") == nil then
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "Wormhole Tool";
+                Text = "Tool added to Backpack!";
+                Duration = 4;
+            })
+        end
+    end
+})
+
+-- Wormhole Tool Button
 MainTab:CreateButton({
     Name = "Wormhole Tool",
     Callback = function()
-        -- // Services
         local Players = game:GetService("Players")
         local RunService = game:GetService("RunService")
         local Workspace = game:GetService("Workspace")
         local Camera = Workspace.CurrentCamera
 
-        -- // Player references
         local player = Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local hrp = character:WaitForChild("HumanoidRootPart")
         local mouse = player:GetMouse()
 
-        -- // Wormhole variables
         local wormholes = {}
         local DETECTION_RADIUS = 4
         local TELEPORT_COOLDOWN = 2.5
         local triggeredWormholes = {}
 
-        -- // Tool creation
         local tool = Instance.new("Tool")
         tool.Name = "Wormhole Tool"
         tool.RequiresHandle = false
         tool.CanBeDropped = false
         tool.Parent = player.Backpack
 
-        -- // Function to create a vertical wormhole
         local function createWormhole(position)
             local lookVector = Camera.CFrame.LookVector
             local flatLook = Vector3.new(lookVector.X, 0, lookVector.Z)
@@ -884,7 +894,7 @@ MainTab:CreateButton({
             portal.Anchored = true
             portal.CanCollide = false
             portal.Material = Enum.Material.Neon
-            portal.Color = Color3.fromRGB(50,0,50)
+            portal.Color = Color3.fromRGB(128,0,128) -- Purple
             portal.CFrame = CFrame.new(position + flatLook*2 + Vector3.new(0,4,0)) *
                              CFrame.fromOrientation(math.rad(90), math.atan2(-flatLook.X, -flatLook.Z), 0)
             portal.Name = "Wormhole"
@@ -897,11 +907,11 @@ MainTab:CreateButton({
             local particle = Instance.new("ParticleEmitter")
             particle.Texture = "rbxassetid://243098098"
             particle.Rate = 200
-            particle.Lifetime = NumberRange.new(0.3,0.8)
+            particle.Lifetime = NumberRange.new(0.5,1)
             particle.Speed = NumberRange.new(0,0)
             particle.SpreadAngle = Vector2.new(360,360)
             particle.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,2), NumberSequenceKeypoint.new(1,0)})
-            particle.Color = ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(50,0,50)), ColorSequenceKeypoint.new(1,Color3.fromRGB(0,0,0))})
+            particle.Color = ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(128,0,128)), ColorSequenceKeypoint.new(1,Color3.fromRGB(0,0,0))})
             particle.Rotation = NumberRange.new(0,360)
             particle.RotSpeed = NumberRange.new(50,150)
             particle.Parent = portal
@@ -909,7 +919,6 @@ MainTab:CreateButton({
             return portal
         end
 
-        -- // Teleport logic
         local function checkTeleport()
             if #wormholes < 2 then return end
             for i, w in ipairs(wormholes) do
@@ -930,8 +939,7 @@ MainTab:CreateButton({
                     RunService.Heartbeat:Wait()
                     hrp.Anchored = oldAnchored
 
-                    spawn(function()
-                        wait(TELEPORT_COOLDOWN)
+                    task.delay(TELEPORT_COOLDOWN, function()
                         triggeredWormholes[w] = nil
                         triggeredWormholes[target] = nil
                     end)
@@ -942,7 +950,6 @@ MainTab:CreateButton({
 
         RunService.Heartbeat:Connect(checkTeleport)
 
-        -- // Tool activation
         tool.Activated:Connect(function()
             local pos = mouse.Hit.Position
             if #wormholes >= 2 then
@@ -952,14 +959,5 @@ MainTab:CreateButton({
             local newPortal = createWormhole(pos)
             table.insert(wormholes,newPortal)
         end)
-
-        -- // Notify player
-        if game:GetService("StarterGui"):FindFirstChild("WormholeToolNotify") == nil then
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "Wormhole Tool";
-                Text = "Tool added to Backpack!";
-                Duration = 4;
-            })
-        end
     end
 })
