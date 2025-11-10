@@ -958,6 +958,4 @@ MainTab:CreateButton({
             end
             local newPortal = createWormhole(pos)
             table.insert(wormholes,newPortal)
-        end)
-    end
-})
+        end) 
