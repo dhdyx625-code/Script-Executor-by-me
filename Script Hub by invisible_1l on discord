@@ -622,3 +622,246 @@ MainTab:CreateButton({
 		loadstring(game:HttpGet("https://pastefy.app/PU6VWuJk/raw"))()
 	end,
 })
+
+MainTab:CreateButton({
+    Name = "Open Music GUI",
+    Callback = function()
+        -- Destroy old GUI safely
+        pcall(function()
+            game.CoreGui.MusicGui:Destroy()
+        end)
+
+        -- Create the GUI
+        local gui = Instance.new("ScreenGui")
+        gui.Name = "MusicGui"
+        gui.ResetOnSpawn = false
+        gui.Parent = game:GetService("CoreGui")
+
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(0, 320, 0, 200)
+        frame.Position = UDim2.new(0.5, -160, 0.5, -100)
+        frame.BackgroundColor3 = Color3.fromRGB(20, 0, 30)
+        frame.BorderSizePixel = 0
+        frame.Active = true
+        frame.Draggable = true
+        frame.Parent = gui
+
+        local corner = Instance.new("UICorner", frame)
+        corner.CornerRadius = UDim.new(0, 10)
+
+        local title = Instance.new("TextLabel")
+        title.Size = UDim2.new(1, 0, 0, 30)
+        title.BackgroundTransparency = 1
+        title.Text = "[by invisible_1l in discord] Music GUI"
+        title.TextColor3 = Color3.fromRGB(170, 0, 255)
+        title.Font = Enum.Font.GothamBold
+        title.TextSize = 20
+        title.Parent = frame
+
+        local textbox = Instance.new("TextBox")
+        textbox.Size = UDim2.new(0.9, 0, 0, 35)
+        textbox.Position = UDim2.new(0.05, 0, 0.35, 0)
+        textbox.BackgroundColor3 = Color3.fromRGB(35, 0, 55)
+        textbox.Text = ""
+        textbox.PlaceholderText = "Put any Roblox music ID here"
+        textbox.PlaceholderColor3 = Color3.fromRGB(150, 100, 200)
+        textbox.TextColor3 = Color3.fromRGB(255, 255, 255)
+        textbox.Font = Enum.Font.Gotham
+        textbox.TextSize = 16
+        textbox.Parent = frame
+
+        local boxCorner = Instance.new("UICorner", textbox)
+        boxCorner.CornerRadius = UDim.new(0, 8)
+
+        local playButton = Instance.new("TextButton")
+        playButton.Size = UDim2.new(0.9, 0, 0, 35)
+        playButton.Position = UDim2.new(0.05, 0, 0.65, 0)
+        playButton.BackgroundColor3 = Color3.fromRGB(120, 0, 200)
+        playButton.Text = "🎼 Play"
+        playButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        playButton.Font = Enum.Font.GothamBold
+        playButton.TextSize = 18
+        playButton.Parent = frame
+
+        local btnCorner = Instance.new("UICorner", playButton)
+        btnCorner.CornerRadius = UDim.new(0, 8)
+
+        local stopButton = Instance.new("TextButton")
+        stopButton.Size = UDim2.new(0.9, 0, 0, 35)
+        stopButton.Position = UDim2.new(0.05, 0, 0.82, 0)
+        stopButton.BackgroundColor3 = Color3.fromRGB(80, 0, 130)
+        stopButton.Text = "Stop"
+        stopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        stopButton.Font = Enum.Font.GothamBold
+        stopButton.TextSize = 18
+        stopButton.Parent = frame
+
+        local btnCorner2 = Instance.new("UICorner", stopButton)
+        btnCorner2.CornerRadius = UDim.new(0, 8)
+
+        local sound = Instance.new("Sound")
+        sound.Volume = 3
+        sound.Looped = false
+        sound.Parent = game:GetService("SoundService")
+
+        playButton.MouseButton1Click:Connect(function()
+            local id = textbox.Text
+            if tonumber(id) then
+                sound.SoundId = "rbxassetid://" .. id
+                sound:Play()
+            else
+                textbox.PlaceholderText = "⚠️ Invalid ID, try again!"
+                textbox.Text = ""
+            end
+        end)
+
+        stopButton.MouseButton1Click:Connect(function()
+            sound:Stop()
+        end)
+    end
+})
+
+MainTab:CreateButton({
+    Name = "Open Skybox/Decal GUI",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local CoreGui = game:GetService("CoreGui")
+        local Lighting = game:GetService("Lighting")
+
+        -- Destroy old GUI safely
+        pcall(function() if CoreGui:FindFirstChild("SkyboxGui") then CoreGui.SkyboxGui:Destroy() end end)
+
+        -- Create GUI
+        local gui = Instance.new("ScreenGui")
+        gui.Name = "SkyboxGui"
+        gui.ResetOnSpawn = false
+        gui.Parent = CoreGui
+
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(0, 380, 0, 240) -- slightly bigger
+        frame.Position = UDim2.new(0.5, -190, 0.5, -120)
+        frame.BackgroundColor3 = Color3.fromRGB(10, 0, 0)
+        frame.BorderSizePixel = 0
+        frame.Active = true
+        frame.Draggable = true
+        frame.Parent = gui
+
+        local corner = Instance.new("UICorner", frame)
+        corner.CornerRadius = UDim.new(0, 10)
+
+        local title = Instance.new("TextLabel")
+        title.Size = UDim2.new(1, 0, 0, 30)
+        title.BackgroundTransparency = 1
+        title.Text = "[by invisible_1l on discord] Decal Changer"
+        title.TextColor3 = Color3.fromRGB(255, 0, 0)
+        title.Font = Enum.Font.GothamBold
+        title.TextSize = 20
+        title.Parent = frame
+
+        local textbox = Instance.new("TextBox")
+        textbox.Size = UDim2.new(0.9, 0, 0, 35)
+        textbox.Position = UDim2.new(0.05, 0, 0.3, 0)
+        textbox.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+        textbox.TextColor3 = Color3.fromRGB(255, 255, 255)
+        textbox.Text = "" -- empty for ghost text
+        textbox.PlaceholderText = "Paste a Decal ID" -- updated ghost text
+        textbox.PlaceholderColor3 = Color3.fromRGB(200, 100, 100)
+        textbox.Font = Enum.Font.Gotham
+        textbox.TextSize = 16
+        textbox.Parent = frame
+
+        local txtCorner = Instance.new("UICorner", textbox)
+        txtCorner.CornerRadius = UDim.new(0, 8)
+
+        local applySky = Instance.new("TextButton")
+        applySky.Size = UDim2.new(0.9, 0, 0, 30)
+        applySky.Position = UDim2.new(0.05, 0, 0.55, 0)
+        applySky.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
+        applySky.Text = "Skybox Changer"
+        applySky.TextColor3 = Color3.fromRGB(255, 255, 255)
+        applySky.Font = Enum.Font.GothamBold
+        applySky.TextSize = 16
+        applySky.Parent = frame
+        Instance.new("UICorner", applySky).CornerRadius = UDim.new(0, 8)
+
+        local applyWorld = Instance.new("TextButton")
+        applyWorld.Size = UDim2.new(0.9, 0, 0, 30)
+        applyWorld.Position = UDim2.new(0.05, 0, 0.7, 0)
+        applyWorld.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
+        applyWorld.Text = "Decal Spam"
+        applyWorld.TextColor3 = Color3.fromRGB(255, 255, 255)
+        applyWorld.Font = Enum.Font.GothamBold
+        applyWorld.TextSize = 16
+        applyWorld.Parent = frame
+        Instance.new("UICorner", applyWorld).CornerRadius = UDim.new(0, 8)
+
+        local removeSky = Instance.new("TextButton")
+        removeSky.Size = UDim2.new(0.43, -5, 0, 30)
+        removeSky.Position = UDim2.new(0.05, 0, 0.85, 0)
+        removeSky.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
+        removeSky.Text = "Remove Skybox"
+        removeSky.TextColor3 = Color3.fromRGB(255, 255, 255)
+        removeSky.Font = Enum.Font.Gotham
+        removeSky.TextSize = 14
+        removeSky.Parent = frame
+        Instance.new("UICorner", removeSky).CornerRadius = UDim.new(0, 8)
+
+        local removeWorld = Instance.new("TextButton")
+        removeWorld.Size = UDim2.new(0.43, -5, 0, 30)
+        removeWorld.Position = UDim2.new(0.52, 0, 0.85, 0)
+        removeWorld.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
+        removeWorld.Text = "Remove Decals"
+        removeWorld.TextColor3 = Color3.fromRGB(255, 255, 255)
+        removeWorld.Font = Enum.Font.Gotham
+        removeWorld.TextSize = 14
+        removeWorld.Parent = frame
+        Instance.new("UICorner", removeWorld).CornerRadius = UDim.new(0, 8)
+
+        local sky
+
+        applySky.MouseButton1Click:Connect(function()
+            local id = textbox.Text
+            if tonumber(id) then
+                if sky then sky:Destroy() end
+                sky = Instance.new("Sky")
+                sky.SkyboxBk = "rbxassetid://"..id
+                sky.SkyboxDn = "rbxassetid://"..id
+                sky.SkyboxFt = "rbxassetid://"..id
+                sky.SkyboxLf = "rbxassetid://"..id
+                sky.SkyboxRt = "rbxassetid://"..id
+                sky.SkyboxUp = "rbxassetid://"..id
+                sky.Parent = Lighting
+            else
+                textbox.PlaceholderText = "Invalid ID!"
+            end
+        end)
+
+        applyWorld.MouseButton1Click:Connect(function()
+            local id = textbox.Text
+            if tonumber(id) then
+                for _, obj in ipairs(workspace:GetDescendants()) do
+                    if obj:IsA("Part") or obj:IsA("MeshPart") then
+                        local decal = Instance.new("Decal")
+                        decal.Texture = "rbxassetid://"..id
+                        decal.Face = Enum.NormalId.Front
+                        decal.Parent = obj
+                    end
+                end
+            end
+        end)
+
+        removeSky.MouseButton1Click:Connect(function()
+            for _, v in ipairs(Lighting:GetChildren()) do
+                if v:IsA("Sky") then v:Destroy() end
+            end
+        end)
+
+        removeWorld.MouseButton1Click:Connect(function()
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                for _, d in ipairs(obj:GetChildren()) do
+                    if d:IsA("Decal") then d:Destroy() end
+                end
+            end
+        end)
+    end
+})
