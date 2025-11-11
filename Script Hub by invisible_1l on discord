@@ -843,119 +843,70 @@ MainTab:CreateButton({
     end
 })
 
-            local newPortal = createWormhole(pos)
-            table.insert(wormholes,newPortal)
-        end)
-
-        -- // Notify player
-        if game:GetService("StarterGui"):FindFirstChild("WormholeToolNotify") == nil then
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "Wormhole Tool";
-                Text = "Tool added to Backpack!";
-                Duration = 4;
-            })
-        end
-    end
-})
-
--- Wormhole Tool Button
 MainTab:CreateButton({
     Name = "Wormhole Tool",
     Callback = function()
+        -- // Services
         local Players = game:GetService("Players")
         local RunService = game:GetService("RunService")
         local Workspace = game:GetService("Workspace")
         local Camera = Workspace.CurrentCamera
 
+        -- // Player
         local player = Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local hrp = character:WaitForChild("HumanoidRootPart")
-        local mouse = player:GetMouse()
 
-        local wormholes = {}
-        local DETECTION_RADIUS = 4
-        local TELEPORT_COOLDOWN = 2.5
-        local triggeredWormholes = {}
-
-        local tool = Instance.new("Tool")
-        tool.Name = "Wormhole Tool"
-        tool.RequiresHandle = false
-        tool.CanBeDropped = false
-        tool.Parent = player.Backpack
-
-        local function createWormhole(position)
-            local lookVector = Camera.CFrame.LookVector
-            local flatLook = Vector3.new(lookVector.X, 0, lookVector.Z)
-            if flatLook.Magnitude == 0 then flatLook = Vector3.new(0,0,1) end
-            flatLook = flatLook.Unit
-
+        -- // Create Wormhole (vertical discs)
+        local function createPortal(position, color)
             local portal = Instance.new("Part")
-            portal.Size = Vector3.new(6,0.2,6)
+            portal.Shape = Enum.PartType.Cylinder
+            portal.Color = color
+            portal.Size = Vector3.new(10, 1, 10)
+            portal.CFrame = CFrame.new(position) * CFrame.Angles(math.rad(90), 0, 0)
             portal.Anchored = true
             portal.CanCollide = false
             portal.Material = Enum.Material.Neon
-            portal.Color = Color3.fromRGB(128,0,128) -- Purple
-            portal.CFrame = CFrame.new(position + flatLook*2 + Vector3.new(0,4,0)) *
-                             CFrame.fromOrientation(math.rad(90), math.atan2(-flatLook.X, -flatLook.Z), 0)
-            portal.Name = "Wormhole"
             portal.Parent = Workspace
-
-            local mesh = Instance.new("CylinderMesh")
-            mesh.Parent = portal
-            mesh.Scale = Vector3.new(1,1,1)
-
-            local particle = Instance.new("ParticleEmitter")
-            particle.Texture = "rbxassetid://243098098"
-            particle.Rate = 200
-            particle.Lifetime = NumberRange.new(0.5,1)
-            particle.Speed = NumberRange.new(0,0)
-            particle.SpreadAngle = Vector2.new(360,360)
-            particle.Size = NumberSequence.new({NumberSequenceKeypoint.new(0,2), NumberSequenceKeypoint.new(1,0)})
-            particle.Color = ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(128,0,128)), ColorSequenceKeypoint.new(1,Color3.fromRGB(0,0,0))})
-            particle.Rotation = NumberRange.new(0,360)
-            particle.RotSpeed = NumberRange.new(50,150)
-            particle.Parent = portal
-
             return portal
         end
 
-        local function checkTeleport()
-            if #wormholes < 2 then return end
-            for i, w in ipairs(wormholes) do
-                if (hrp.Position - w.Position).Magnitude <= DETECTION_RADIUS and not triggeredWormholes[w] then
-                    local target = wormholes[3 - i]
-                    if triggeredWormholes[target] then continue end
+        local wormholeA = createPortal(hrp.Position + Vector3.new(0, 5, 0), Color3.fromRGB(100, 0, 255))
+        local wormholeB = createPortal(hrp.Position + Vector3.new(0, 100, 0), Color3.fromRGB(255, 0, 255))
 
-                    triggeredWormholes[w] = true
-                    triggeredWormholes[target] = true
-
-                    hrp.AssemblyLinearVelocity = Vector3.new(0,0,0)
-                    hrp.AssemblyAngularVelocity = Vector3.new(0,0,0)
-
-                    local teleportPosition = target.Position + Vector3.new(0,4,0)
-                    local oldAnchored = hrp.Anchored
-                    hrp.Anchored = true
-                    hrp.CFrame = CFrame.new(teleportPosition)
-                    RunService.Heartbeat:Wait()
-                    hrp.Anchored = oldAnchored
-
-                    task.delay(TELEPORT_COOLDOWN, function()
-                        triggeredWormholes[w] = nil
-                        triggeredWormholes[target] = nil
-                    end)
-                    break
-                end
-            end
+        -- Portal effects
+        local function swirl(portal)
+            local p = Instance.new("ParticleEmitter")
+            p.Color = ColorSequence.new(portal.Color)
+            p.Texture = "rbxassetid://243098098"
+            p.Lifetime = NumberRange.new(1)
+            p.Rate = 30
+            p.Speed = NumberRange.new(0)
+            p.Rotation = NumberRange.new(0, 360)
+            p.RotSpeed = NumberRange.new(50)
+            p.Parent = portal
         end
 
-        RunService.Heartbeat:Connect(checkTeleport)
+        swirl(wormholeA)
+        swirl(wormholeB)
 
-        tool.Activated:Connect(function()
-            local pos = mouse.Hit.Position
-            if #wormholes >= 2 then
-                wormholes[1]:Destroy()
-                table.remove(wormholes,1)
-            end
-            local newPortal = createWormhole(pos)
-            table.insert(wormholes,newPortal)
-        end) 
+        -- Link portals visually
+        local beam = Instance.new("Beam")
+        beam.Color = ColorSequence.new(wormholeA.Color)
+        beam.Width0 = 0.5
+        beam.Width1 = 0.5
+        beam.FaceCamera = true
+
+        local att1 = Instance.new("Attachment", wormholeA)
+        local att2 = Instance.new("Attachment", wormholeB)
+        beam.Attachment0 = att1
+        beam.Attachment1 = att2
+        beam.Parent = wormholeA
+
+        -- Optional movement animation
+        RunService.RenderStepped:Connect(function()
+            wormholeA.Orientation = wormholeA.Orientation + Vector3.new(0, 3, 0)
+            wormholeB.Orientation = wormholeB.Orientation + Vector3.new(0, -3, 0)
+        end)
+    end
+})
