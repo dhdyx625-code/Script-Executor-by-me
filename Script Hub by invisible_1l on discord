@@ -459,7 +459,7 @@ MainTab:CreateButton({
         box.Font = FONT
         box.TextSize = FONT_SIZE
         box.TextColor3 = PLACEHOLDER_COLOR
-        box.Text = ">command line:"  -- placeholder text
+        box.Text = "> command line:"  -- placeholder text
         box.BackgroundColor3 = INPUT_BG
         box.ClearTextOnFocus = false
         box.MultiLine = false
@@ -568,7 +568,7 @@ MainTab:CreateButton({
                     log("Error: "..tostring(err))
                 end
             end
-            box.Text = ">command line:"
+            box.Text = "> command line:"
             box.TextColor3 = PLACEHOLDER_COLOR
         end
 
@@ -584,7 +584,7 @@ MainTab:CreateButton({
 
         -- Button connections
         execBtn.MouseButton1Click:Connect(function()
-            if box.Text ~= ">command line:" then runCommand(box.Text) end
+            if box.Text ~= "> command line:" then runCommand(box.Text) end
         end)
         box.FocusLost:Connect(function(enterPressed)
             if enterPressed and box.Text ~= ">command line:" then runCommand(box.Text) end
