@@ -1710,6 +1710,5 @@ TextButton.TextWrapped = true
 TextButton.MouseButton1Down:Connect(function()
 	Real.TextBox.Text = "put anything here                   "
 	Fake.TextBox.Text = "[Server]: "
-end)
-    end
-})
+end
+({
