@@ -843,84 +843,12 @@ MainTab:CreateButton({
     end
 })
 
-MainTab:CreateButton({
-    Name = "Wormhole Tool",
-    Callback = function()
-        -- // Services
-        local Players = game:GetService("Players")
-        local RunService = game:GetService("RunService")
-        local Workspace = game:GetService("Workspace")
-        local Camera = Workspace.CurrentCamera
-
-        -- // Player
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local hrp = character:WaitForChild("HumanoidRootPart")
-
-        -- // Create Wormhole (vertical discs)
-        local function createPortal(position, color)
-            local portal = Instance.new("Part")
-            portal.Shape = Enum.PartType.Cylinder
-            portal.Color = color
-            portal.Size = Vector3.new(10, 1, 10)
-            portal.CFrame = CFrame.new(position) * CFrame.Angles(math.rad(90), 0, 0)
-            portal.Anchored = true
-            portal.CanCollide = false
-            portal.Material = Enum.Material.Neon
-            portal.Parent = Workspace
-            return portal
-        end
-
-        local wormholeA = createPortal(hrp.Position + Vector3.new(0, 5, 0), Color3.fromRGB(100, 0, 255))
-        local wormholeB = createPortal(hrp.Position + Vector3.new(0, 100, 0), Color3.fromRGB(255, 0, 255))
-
-        -- Portal effects
-        local function swirl(portal)
-            local p = Instance.new("ParticleEmitter")
-            p.Color = ColorSequence.new(portal.Color)
-            p.Texture = "rbxassetid://243098098"
-            p.Lifetime = NumberRange.new(1)
-            p.Rate = 30
-            p.Speed = NumberRange.new(0)
-            p.Rotation = NumberRange.new(0, 360)
-            p.RotSpeed = NumberRange.new(50)
-            p.Parent = portal
-        end
-
-        swirl(wormholeA)
-        swirl(wormholeB)
-
-        -- Link portals visually
-        local beam = Instance.new("Beam")
-        beam.Color = ColorSequence.new(wormholeA.Color)
-        beam.Width0 = 0.5
-        beam.Width1 = 0.5
-        beam.FaceCamera = true
-
-        local att1 = Instance.new("Attachment", wormholeA)
-        local att2 = Instance.new("Attachment", wormholeB)
-        beam.Attachment0 = att1
-        beam.Attachment1 = att2
-        beam.Parent = wormholeA
-
-        -- Optional movement animation
-        RunService.RenderStepped:Connect(function()
-            wormholeA.Orientation = wormholeA.Orientation + Vector3.new(0, 3, 0)
-            wormholeB.Orientation = wormholeB.Orientation + Vector3.new(0, -3, 0)
-        end)
-    end
-})
 
 -- Assuming you have your Rayfield library already loaded
-local MainTab = Window:CreateTab("Main")
 
 MainTab:CreateButton({
     Name = "Open ChatTroll GUI",
     Callback = function()
-        -- Gui to Lua
--- Version: 3.2
-
--- Instances:
 
 local ChatTroll = Instance.new("ScreenGui")
 local Main = Instance.new("Frame")
